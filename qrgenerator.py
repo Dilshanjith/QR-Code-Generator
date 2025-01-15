@@ -5,10 +5,30 @@ from tkinter import ttk,messagebox,filedialog
 
 
 def createQR(*args):
-    ...
+    data = text_entry.get()
+    if data:
+        img = qrcode.make(data)
+        res_img = img.resize((280,250))
+
+        tkimage = ImageTk.PhotoImage(res_img)
+        qr_canvas.create_image(0,0,anchor=tk.NW, image=tkimage)
+        qr_canvas.image = tkimage
+
+    else:
+        messagebox.showwarning("Warning ",'Enter Data in Entery First')
 
 def saveQR(*args):
-    ...
+    data = text_entry.get()
+    if data:
+        img = qrcode.make(data)
+        res_img = img.resize((280,250))
+
+        path = filedialog.asksaveasfilename(defaultextension=".png",)
+        if path:
+            res_img.save(path)
+            messagebox.showinfo("Sucess","QR code is saved")
+        else:
+            messagebox.showwarning("Warning","Enter Data in Entery First")    
 
 
 root = tk.Tk()
@@ -27,7 +47,8 @@ cover_img =tk.PhotoImage(file="qrCover.png")
 
 qr_canvas = tk.Canvas(frame1)
 qr_canvas.create_image(0,0,anchor=tk.NW,image=cover_img)
-
+qr_canvas.image = cover_img
+qr_canvas.bind("<Double-1>",saveQR)
 qr_canvas.pack(fill=tk.BOTH)
 
 text_entry = ttk.Entry(frame2,width=32,font=("Sitkka Small",11),justify=tk.CENTER)
